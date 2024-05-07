@@ -5,9 +5,9 @@ import { AuthContext } from "../../Providers/AuthProvider";
 import axios from "axios";
 
 const Login = () => {
-  const location = useLocation()
-  console.log(location)
-  const navigate = useNavigate()
+  const location = useLocation();
+  console.log(location);
+  const navigate = useNavigate();
   const { signIn } = useContext(AuthContext);
   const handleLogin = (event) => {
     event.preventDefault();
@@ -19,16 +19,19 @@ const Login = () => {
     console.log(email, password);
     signIn(email, password)
       .then((result) => {
-        const loggedInUser = result.user
-        console.log(loggedInUser)
-        const user = {email}
-        // navigate(location?.state?location?.state:'/')
-        //get access token
-        axios.post('http://localhost:5000/jwt',user)
-        .then(res => {
-          console.log(res.data)
-        })
+        const loggedInUser = result.user;
+        console.log(loggedInUser);
+        const user = { email };
 
+        //get access token
+        axios
+          .post("http://localhost:5000/jwt", user, { withCredentials: true })
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.success) {
+              navigate(location?.state ? location?.state : "/");
+            }
+          });
       })
       .catch((error) => {
         console.log(error);
